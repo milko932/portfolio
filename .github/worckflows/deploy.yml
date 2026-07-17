@@ -1,0 +1,44 @@
+name: Deploy Web Page
+ 
+on:
+  push:
+    # Tells the runner to wake up only when changes are saved to the "main" branch
+    branches: [ main ]
+ 
+# Gives the runner permission to securely write to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+ 
+jobs:
+  deploy:
+    # Tells GitHub to spin up a clean virtual computer running standard Linux
+    runs-on: ubuntu-latest
+    steps:
+      # Step A: Tells the runner to fetch the files from our repository
+      - name: Fetch repository files
+        uses: actions/checkout@v4
+ 
+      # Step B: Double-checks that our main index.html actually exists
+      - name: Code Integrity Check
+        run: |
+          if [ ! -f index.html ]; then
+            echo "❌ ERROR: index.html was not found in the root directory!"
+            exit 1
+          fi
+          echo "✅ index.html is verified and safe."
+ 
+      # Step C: Configures GitHub Pages environments on the runner
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+ 
+      # Step D: Compiles and uploads our folder package
+      - name: Upload Page Files
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+ 
+      # Step E: Puts the code live on the public internet
+      - name: Deploy Live Page
+        uses: actions/deploy-pages@v4
