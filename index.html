@@ -1,309 +1,819 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-full scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Milko Sinapov | Portfolio</title>
+    
+    <!-- Google Fonts & Tailwind CDN -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Phosphor Icons for modern minimalist iconography -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
 
-    .googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0f7ff',
+                            100: '#e0effe',
+                            500: '#0b57d0',
+                            600: '#0a45b4',
+                            900: '#041e49',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
 
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            scroll-behavior: smooth;
+        /* Modern Glassmorphism & custom transition controls */
+        .glass {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
         }
-
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: #0f172a;
-            color: #fff;
+        .dark .glass {
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
         }
-
-        nav {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            background: rgba(15, 23, 42, 0.9);
-            backdrop-filter: blur(10px);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 10%;
-            z-index: 1000;
+        /* Custom page slide-fade animations */
+        .page-transition {
+            transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-
-        .logo {
-            font-size: 1.4rem;
-            font-weight: 700;
-            color: #38bdf8;
-        }
-
-        nav ul {
-            display: flex;
-            list-style: none;
-            gap: 25px;
-        }
-
-        nav a {
-            color: white;
-            text-decoration: none;
-            transition: .3s;
-        }
-
-        nav a:hover {
-            color: #38bdf8;
-        }
-
-        section {
-            min-height: 100vh;
-            padding: 120px 10%;
-        }
-
-        .hero {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-        }
-
-        .hero-text h1 {
-            font-size: 4rem;
-            margin-bottom: 10px;
-        }
-
-        .hero-text span {
-            color: #38bdf8;
-        }
-
-        .hero-text p {
-            font-size: 1.1rem;
-            color: #cbd5e1;
-            max-width: 600px;
-            margin: 20px 0;
-        }
-
-        .btn {
-            display: inline-block;
-            padding: 14px 32px;
-            background: #38bdf8;
-            color: #0f172a;
-            text-decoration: none;
-            border-radius: 30px;
-            font-weight: 600;
-            transition: .3s;
-        }
-
-        .btn:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 10px 25px rgba(56,189,248,.4);
-        }
-
-        .hero-card {
-            width: 320px;
-            height: 320px;
-            background: linear-gradient(135deg,#38bdf8,#2563eb);
-            border-radius: 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 100px;
-            font-weight: bold;
-            margin-top: 30px;
-        }
-
-        h2 {
-            font-size: 2.5rem;
-            margin-bottom: 25px;
-            color: #38bdf8;
-        }
-
-        .about p {
-            max-width: 800px;
-            color: #cbd5e1;
-            line-height: 1.8;
-        }
-
-        .skills-grid,
-        .projects-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit,minmax(250px,1fr));
-            gap: 25px;
-            margin-top: 30px;
-        }
-
-        .card {
-            background: #1e293b;
-            padding: 25px;
-            border-radius: 20px;
-            transition: .3s;
-        }
-
-        .card:hover {
-            transform: translateY(-10px);
-        }
-
-        .card h3 {
-            margin-bottom: 10px;
-            color: #38bdf8;
-        }
-
-        .contact {
-            text-align: center;
-        }
-
-        .contact p {
-            margin-bottom: 20px;
-            color: #cbd5e1;
-        }
-
-        footer {
-            padding: 30px;
-            text-align: center;
-            background: #020617;
-            color: #94a3b8;
-        }
-
-        .fade-in {
+        .page-hidden {
             opacity: 0;
-            transform: translateY(30px);
-            transition: all .6s ease;
+            transform: translateY(12px);
+            pointer-events: none;
+            position: absolute;
+            width: 100%;
         }
-
-        .fade-in.show {
+        .page-visible {
             opacity: 1;
             transform: translateY(0);
-        }
-
-        @media (max-width:768px) {
-            .hero-text h1 {
-                font-size: 2.8rem;
-            }
-
-            nav ul {
-                gap: 15px;
-            }
+            position: relative;
         }
     </style>
 </head>
-<body>
+<body class="h-full bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 font-sans transition-colors duration-300 flex flex-col overflow-x-hidden">
 
-    <nav>
-        <div class="logo">Milko Sinapov</div>
+    <!-- Header component with blur support -->
+    <header class="sticky top-0 z-50 w-full border-b border-slate-200/80 dark:border-slate-800/80 glass transition-colors">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <!-- Brand Logo -->
+            <a href="#" onclick="navigateTo('about')" class="flex items-center space-x-2.5">
+                <div class="w-9 h-9 rounded-xl bg-brand-500 flex items-center justify-center text-white font-bold text-lg shadow-md shadow-brand-500/20">
+                    M
+                </div>
+                <div class="flex flex-col">
+                    <span class="font-bold tracking-tight text-slate-900 dark:text-white leading-tight">Milko Sinapov</span>
+                    <span class="text-[10px] text-slate-500 dark:text-slate-400 font-medium">Full Stack Engineer</span>
+                </div>
+            </a>
 
-        <ul>
-            <li>">About</a></li>
-            <li>skills">Skills</a></li>
-            <li>">Projects</a></li>
-            <li>">Contact</a></li>
-        </ul>
-    </nav>
+            <!-- Desktop Navigation Menu -->
+            <nav class="hidden md:flex items-center space-x-1">
+                <button onclick="navigateTo('about')" data-nav="about" class="px-4 py-2 rounded-lg text-sm font-medium transition-colors text-brand-500 bg-brand-50 dark:bg-brand-900/30 dark:text-brand-300">
+                    <i class="ph ph-user-circle mr-1.5 align-middle text-base"></i>About Me
+                </button>
+                <button onclick="navigateTo('education')" data-nav="education" class="px-4 py-2 rounded-lg text-sm font-medium transition-colors text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-900">
+                    <i class="ph ph-graduation-cap mr-1.5 align-middle text-base"></i>Education
+                </button>
+                <button onclick="navigateTo('projects')" data-nav="projects" class="px-4 py-2 rounded-lg text-sm font-medium transition-colors text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-900">
+                    <i class="ph ph-code-block mr-1.5 align-middle text-base"></i>Projects
+                </button>
+            </nav>
 
-    <section class="hero">
-        <div class="hero-text fade-in">
-            <h1>Hello, I'm <span>Milko Sinapov</span></h1>
-            <p>
-                Student, aspiring developer, and technology enthusiast.
-                I enjoy creating modern web experiences, learning new
-                technologies, and building projects that solve real-world problems.
-            </p>
-
-            #projectsView Projects</a>
-        </div>
-
-        <div class="hero-card fade-in">
-            MS
-        </div>
-    </section>
-
-    <section id="about" class="about fade-in">
-        <h2>About Me</h2>
-
-        <p>
-            I'm Milko Sinapov, a passionate student with a growing interest in
-            software development, web design, and digital technologies.
-            My goal is to continuously improve my skills, contribute to exciting
-            projects, and create clean, user-friendly digital solutions.
-        </p>
-    </section>
-
-    <section id="skills" class="fade-in">
-        <h2>Skills</h2>
-
-        <div class="skills-grid">
-            <div class="card">
-                <h3>HTML & CSS</h3>
-                <p>Building responsive and modern websites.</p>
+            <!-- Quick Action Utilities (Theme, Contact CTA) -->
+            <div class="hidden md:flex items-center space-x-3">
+                <button onclick="toggleDarkMode()" class="p-2 rounded-lg border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-900 transition-colors" aria-label="Toggle dark mode">
+                    <i id="theme-icon" class="ph ph-moon text-lg"></i>
+                </button>
+                <button onclick="openContactModal()" class="px-4 py-2 rounded-lg bg-slate-900 dark:bg-white dark:text-slate-900 text-white hover:bg-slate-800 dark:hover:bg-slate-100 text-sm font-medium transition-colors">
+                    Contact
+                </button>
             </div>
 
-            <div class="card">
-                <h3>JavaScript</h3>
-                <p>Creating interactive and dynamic experiences.</p>
-            </div>
-
-            <div class="card">
-                <h3>UI/UX Design</h3>
-                <p>Clean, intuitive, and user-focused interfaces.</p>
-            </div>
-
-            <div class="card">
-                <h3>Problem Solving</h3>
-                <p>Analytical thinking and creative solutions.</p>
+            <!-- Mobile Menu Control Center -->
+            <div class="flex items-center space-x-2 md:hidden">
+                <button onclick="toggleDarkMode()" class="p-2 rounded-lg border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-900 transition-colors" aria-label="Toggle dark mode">
+                    <i id="theme-icon-mobile" class="ph ph-moon text-lg"></i>
+                </button>
+                <!-- Burger Button -->
+                <button id="burger-button" onclick="toggleMobileMenu()" class="p-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-900 transition-all focus:outline-none" aria-label="Toggle Mobile Menu">
+                    <div class="w-6 h-5 relative flex flex-col justify-between">
+                        <span id="burger-line-1" class="w-full h-0.5 bg-current rounded-full transition-all duration-300 origin-left"></span>
+                        <span id="burger-line-2" class="w-full h-0.5 bg-current rounded-full transition-all duration-300"></span>
+                        <span id="burger-line-3" class="w-full h-0.5 bg-current rounded-full transition-all duration-300 origin-left"></span>
+                    </div>
+                </button>
             </div>
         </div>
-    </section>
 
-    <section id="projects" class="fade-in">
-        <h2>Projects</h2>
-
-        <div class="projects-grid">
-            <div class="card">
-                <h3>Portfolio Website</h3>
-                <p>A modern personal portfolio showcasing skills and projects.</p>
-            </div>
-
-            <div class="card">
-                <h3>Web Application</h3>
-                <p>Interactive application built with modern web technologies.</p>
-            </div>
-
-            <div class="card">
-                <h3>Future Project</h3>
-                <p>Your next great project can be showcased here.</p>
+        <!-- Mobile Dropdown Navigation Drawer -->
+        <div id="mobile-menu" class="hidden md:hidden border-b border-slate-200 dark:border-slate-800 bg-white/95 dark:bg-slate-950/95 backdrop-blur-lg transition-all duration-300">
+            <div class="px-4 pt-2 pb-4 space-y-1.5">
+                <button onclick="navigateTo('about')" data-nav-mobile="about" class="w-full text-left px-4 py-3 rounded-xl text-base font-medium flex items-center space-x-3 text-brand-500 bg-brand-50 dark:bg-brand-900/30 dark:text-brand-300">
+                    <i class="ph ph-user-circle text-xl"></i>
+                    <span>About Me</span>
+                </button>
+                <button onclick="navigateTo('education')" data-nav-mobile="education" class="w-full text-left px-4 py-3 rounded-xl text-base font-medium flex items-center space-x-3 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-900">
+                    <i class="ph ph-graduation-cap text-xl"></i>
+                    <span>Education</span>
+                </button>
+                <button onclick="navigateTo('projects')" data-nav-mobile="projects" class="w-full text-left px-4 py-3 rounded-xl text-base font-medium flex items-center space-x-3 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-900">
+                    <i class="ph ph-code-block text-xl"></i>
+                    <span>Projects</span>
+                </button>
+                <div class="pt-2 border-t border-slate-100 dark:border-slate-900">
+                    <button onclick="openContactModal(); toggleMobileMenu();" class="w-full py-3 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 hover:bg-slate-800 dark:hover:bg-slate-100 text-center font-medium shadow-sm">
+                        Contact Me
+                    </button>
+                </div>
             </div>
         </div>
-    </section>
+    </header>
 
-    <section id="contact" class="contact fade-in">
-        <h2>Get In Touch</h2>
+    <!-- Content container with centralized width alignment -->
+    <main class="flex-grow max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 w-full relative">
 
-        <p>
-            Interested in collaborating or discussing technology?
-        </p>
+        <!-- ======================================= -->
+        <!-- 1. ABOUT ME PAGE VIEW                   -->
+        <!-- ======================================= -->
+        <section id="page-about" class="page-transition page-visible">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+                
+                <!-- Left Bio Card Info -->
+                <div class="lg:col-span-5 bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 border border-slate-100 dark:border-slate-800 shadow-xl shadow-slate-200/50 dark:shadow-none flex flex-col items-center text-center">
+                    <!-- Profile Picture Block -->
+                    <div class="relative w-32 h-32 mb-6">
+                        <div class="absolute inset-0 bg-gradient-to-tr from-brand-500 to-indigo-500 rounded-full animate-pulse blur opacity-30"></div>
+                        <img id="avatar-img" class="w-32 h-32 rounded-full border-4 border-white dark:border-slate-800 object-cover relative z-10 shadow-lg" 
+                             src="https://placehold.co/150/0b57d0/ffffff?text=Milko" 
+                             alt="Milko Sinapov profile picture"
+                             onerror="this.src='https://placehold.co/150/475569/ffffff?text=MS'">
+                        <span class="absolute bottom-1 right-1 w-5 h-5 bg-emerald-500 border-4 border-white dark:border-slate-900 rounded-full z-20" title="Active and ready for hire"></span>
+                    </div>
 
-        :your.email@example.com" class="btn">
-            Contact Me
-        </a>
-    </section>
+                    <!-- Role Meta Details -->
+                    <h1 class="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">Milko Sinapov</h1>
+                    <p class="text-sm text-brand-500 dark:text-brand-400 font-semibold uppercase tracking-wider mt-1.5">Full Stack Web Architect</p>
+                    <p class="text-xs text-slate-400 dark:text-slate-500 mt-1 flex items-center justify-center gap-1">
+                        <i class="ph ph-map-pin text-sm text-rose-500"></i> Munich, Germany (Open to Remote)
+                    </p>
 
-    <footer>
-        © 2026 Milko Sinapov. All Rights Reserved.
+                    <!-- Profile Social Badges -->
+                    <div class="flex items-center space-x-2 mt-5">
+                        <a href="https://github.com" target="_blank" class="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors text-slate-600 dark:text-slate-300" aria-label="Github Profile">
+                            <i class="ph ph-github-logo text-xl"></i>
+                        </a>
+                        <a href="https://linkedin.com" target="_blank" class="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors text-slate-600 dark:text-slate-300" aria-label="LinkedIn Profile">
+                            <i class="ph ph-linkedin-logo text-xl"></i>
+                        </a>
+                        <a href="https://twitter.com" target="_blank" class="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors text-slate-600 dark:text-slate-300" aria-label="X Profile">
+                            <i class="ph ph-twitter-logo text-xl"></i>
+                        </a>
+                    </div>
+
+                    <!-- Metrics Segment with touch interactivity -->
+                    <div class="grid grid-cols-2 gap-4 w-full mt-6 pt-6 border-t border-slate-100 dark:border-slate-800">
+                        <div class="p-3 bg-slate-50 dark:bg-slate-800/40 rounded-xl">
+                            <span class="block text-2xl font-extrabold text-brand-500 dark:text-brand-400">4+</span>
+                            <span class="text-xs text-slate-500 dark:text-slate-400 font-medium">Years Experience</span>
+                        </div>
+                        <div class="p-3 bg-slate-50 dark:bg-slate-800/40 rounded-xl">
+                            <span class="block text-2xl font-extrabold text-brand-500 dark:text-brand-400">18+</span>
+                            <span class="text-xs text-slate-500 dark:text-slate-400 font-medium">Completed Projects</span>
+                        </div>
+                    </div>
+
+                    <button onclick="downloadResume()" class="w-full mt-6 py-3 px-4 rounded-xl border border-slate-200 dark:border-slate-800 text-sm font-semibold hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center justify-center gap-2 transition-colors active:scale-[0.98]">
+                        <i class="ph ph-download"></i> Download Resume
+                    </button>
+                </div>
+
+                <!-- Right Side Main Bio & Skills -->
+                <div class="lg:col-span-7 space-y-6 sm:space-y-8">
+                    <!-- Text Summary Area -->
+                    <div class="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 border border-slate-100 dark:border-slate-800 shadow-xl shadow-slate-200/50 dark:shadow-none">
+                        <h2 class="text-xl font-bold mb-4 text-slate-900 dark:text-white flex items-center gap-2">
+                            <i class="ph ph-sparkle text-amber-500 text-2xl"></i> My Core Philosophy
+                        </h2>
+                        <div class="prose prose-slate dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 text-sm sm:text-base leading-relaxed space-y-4">
+                            <p>
+                                I build digital products with strict attention to performance engineering, optimal database design, and premium interface aesthetics. I approach problems with system-level analytical thinking and user-centric logic.
+                            </p>
+                            <p>
+                                My workflow is focused around clean, predictable TypeScript architecture combined with responsive UI frameworks. I prioritize building software that scale effortlessly while remaining delightful to interact with.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Interactive Tech Matrix Block -->
+                    <div class="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 border border-slate-100 dark:border-slate-800 shadow-xl shadow-slate-200/50 dark:shadow-none">
+                        <div class="flex items-center justify-between mb-4">
+                            <h2 class="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                                <i class="ph ph-app-window text-brand-500 text-2xl"></i> Capabilities Matrix
+                            </h2>
+                            <span class="text-xs text-slate-400 font-medium hidden sm:inline">Tap to explore context</span>
+                        </div>
+                        
+                        <!-- Categorized skill matrix items with hover description trigger -->
+                        <div class="space-y-4">
+                            <div>
+                                <span class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest block mb-2">Frontend Systems</span>
+                                <div class="flex flex-wrap gap-2">
+                                    <button onclick="revealSkillDetail('React', 'Expert knowledge of hooks, concurrency rendering, global state, and SSR patterns.')" class="px-3.5 py-1.5 rounded-xl bg-slate-50 dark:bg-slate-800 text-sm font-medium hover:bg-brand-50 hover:text-brand-600 dark:hover:bg-brand-950/30 dark:hover:text-brand-300 transition-all border border-slate-100 dark:border-slate-800">React.js</button>
+                                    <button onclick="revealSkillDetail('Vue', 'Highly capable utilizing Options & Composition API architectures.')" class="px-3.5 py-1.5 rounded-xl bg-slate-50 dark:bg-slate-800 text-sm font-medium hover:bg-brand-50 hover:text-brand-600 dark:hover:bg-brand-950/30 dark:hover:text-brand-300 transition-all border border-slate-100 dark:border-slate-800">Vue.js</button>
+                                    <button onclick="revealSkillDetail('Tailwind CSS', 'Fluid responsive styling architectures with strict adherence to visual design tokens.')" class="px-3.5 py-1.5 rounded-xl bg-slate-50 dark:bg-slate-800 text-sm font-medium hover:bg-brand-50 hover:text-brand-600 dark:hover:bg-brand-950/30 dark:hover:text-brand-300 transition-all border border-slate-100 dark:border-slate-800">Tailwind CSS</button>
+                                    <button onclick="revealSkillDetail('TypeScript', 'Type-safety validation, generics configurations, interface definitions.')" class="px-3.5 py-1.5 rounded-xl bg-slate-50 dark:bg-slate-800 text-sm font-medium hover:bg-brand-50 hover:text-brand-600 dark:hover:bg-brand-950/30 dark:hover:text-brand-300 transition-all border border-slate-100 dark:border-slate-800">TypeScript</button>
+                                </div>
+                            </div>
+
+                            <div>
+                                <span class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest block mb-2">Backend Architecture</span>
+                                <div class="flex flex-wrap gap-2">
+                                    <button onclick="revealSkillDetail('Node.js', 'Rest APIs creation, worker threads, high throughput systems with express/nest.')" class="px-3.5 py-1.5 rounded-xl bg-slate-50 dark:bg-slate-800 text-sm font-medium hover:bg-brand-50 hover:text-brand-600 dark:hover:bg-brand-950/30 dark:hover:text-brand-300 transition-all border border-slate-100 dark:border-slate-800">Node.js</button>
+                                    <button onclick="revealSkillDetail('PostgreSQL', 'Optimal indices, transaction queries scaling, schema migrations validation.')" class="px-3.5 py-1.5 rounded-xl bg-slate-50 dark:bg-slate-800 text-sm font-medium hover:bg-brand-50 hover:text-brand-600 dark:hover:bg-brand-950/30 dark:hover:text-brand-300 transition-all border border-slate-100 dark:border-slate-800">PostgreSQL</button>
+                                    <button onclick="revealSkillDetail('Python', 'Automation scripting, Django/FastAPI engines, AI integration.')" class="px-3.5 py-1.5 rounded-xl bg-slate-50 dark:bg-slate-800 text-sm font-medium hover:bg-brand-50 hover:text-brand-600 dark:hover:bg-brand-950/30 dark:hover:text-brand-300 transition-all border border-slate-100 dark:border-slate-800">Python</button>
+                                    <button onclick="revealSkillDetail('REST / GraphQL', 'Declarative data query frameworks, type validation schemas.')" class="px-3.5 py-1.5 rounded-xl bg-slate-50 dark:bg-slate-800 text-sm font-medium hover:bg-brand-50 hover:text-brand-600 dark:hover:bg-brand-950/30 dark:hover:text-brand-300 transition-all border border-slate-100 dark:border-slate-800">GraphQL / APIs</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Mini feedback box showing detailed data when a skill is tapped -->
+                        <div id="skill-detail-box" class="hidden mt-6 p-4 rounded-xl bg-brand-50/50 dark:bg-slate-950/40 border border-brand-100 dark:border-slate-800/80 transition-all">
+                            <span id="skill-detail-title" class="block font-bold text-slate-900 dark:text-brand-300 text-sm">React</span>
+                            <span id="skill-detail-desc" class="text-xs text-slate-500 dark:text-slate-400 mt-1 block">Detail text goes here dynamically.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ======================================= -->
+        <!-- 2. EDUCATION PAGE VIEW                 -->
+        <!-- ======================================= -->
+        <section id="page-education" class="page-transition page-hidden">
+            <div class="max-w-3xl mx-auto space-y-8">
+                <div class="text-center">
+                    <h2 class="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">Academic Milestone Steps</h2>
+                    <p class="text-sm text-slate-500 dark:text-slate-400 mt-2">A record of formal learning, tech accomplishments, and key credentials.</p>
+                </div>
+
+                <!-- Sequential Timeline layout optimized for readability -->
+                <div class="relative pl-6 sm:pl-8 border-l-2 border-slate-200 dark:border-slate-800 space-y-12 ml-4">
+                    
+                    <!-- Milestone Step 1 -->
+                    <div class="relative group">
+                        <!-- Node Marker inside timeline -->
+                        <div class="absolute -left-[31px] sm:-left-[39px] top-1.5 w-6 h-6 rounded-full border-4 border-slate-50 dark:border-slate-950 bg-brand-500 group-hover:scale-110 transition-transform"></div>
+                        
+                        <div class="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-100 dark:border-slate-800 shadow-md group-hover:shadow-lg transition-all">
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1 mb-3">
+                                <span class="px-2.5 py-1 rounded-lg bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400 text-xs font-bold self-start sm:self-auto">
+                                    Graduated 2024
+                                </span>
+                                <span class="text-sm font-semibold text-slate-400 dark:text-slate-500 flex items-center gap-1">
+                                    <i class="ph ph-calendar-blank"></i> Oct 2021 - Jun 2024
+                                </span>
+                            </div>
+                            <h3 class="text-lg font-bold text-slate-900 dark:text-white">B.Sc. in Computer Science</h3>
+                            <p class="text-sm text-brand-500 dark:text-brand-400 font-medium">Technical University of Munich</p>
+                            <p class="text-sm text-slate-500 dark:text-slate-400 mt-3 leading-relaxed">
+                                Specialization in Software Engineering patterns and Distributed Systems architecture. Focus on advanced web system structures, database optimization, and algorithm performance diagnostics.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Milestone Step 2 -->
+                    <div class="relative group">
+                        <div class="absolute -left-[31px] sm:-left-[39px] top-1.5 w-6 h-6 rounded-full border-4 border-slate-50 dark:border-slate-950 bg-indigo-500 group-hover:scale-110 transition-transform"></div>
+                        
+                        <div class="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-100 dark:border-slate-800 shadow-md group-hover:shadow-lg transition-all">
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1 mb-3">
+                                <span class="px-2.5 py-1 rounded-lg bg-indigo-50 dark:bg-indigo-950/30 text-indigo-600 dark:text-indigo-400 text-xs font-bold self-start sm:self-auto">
+                                    Accredited
+                                </span>
+                                <span class="text-sm font-semibold text-slate-400 dark:text-slate-500 flex items-center gap-1">
+                                    <i class="ph ph-calendar-blank"></i> May 2024
+                                </span>
+                            </div>
+                            <h3 class="text-lg font-bold text-slate-900 dark:text-white">AWS Certified Developer - Associate</h3>
+                            <p class="text-sm text-indigo-600 dark:text-indigo-400 font-medium">Amazon Web Services</p>
+                            <p class="text-sm text-slate-500 dark:text-slate-400 mt-3 leading-relaxed">
+                                Validated expertise in building secure, resilient cloud native applications, managing serverless architectures with Lambda, deploying container pipelines, and monitoring system telemetry logs.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Milestone Step 3 -->
+                    <div class="relative group">
+                        <div class="absolute -left-[31px] sm:-left-[39px] top-1.5 w-6 h-6 rounded-full border-4 border-slate-50 dark:border-slate-950 bg-teal-500 group-hover:scale-110 transition-transform"></div>
+                        
+                        <div class="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-100 dark:border-slate-800 shadow-md group-hover:shadow-lg transition-all">
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1 mb-3">
+                                <span class="px-2.5 py-1 rounded-lg bg-teal-50 dark:bg-teal-950/30 text-teal-600 dark:text-teal-400 text-xs font-bold self-start sm:self-auto">
+                                    Continuous
+                                </span>
+                                <span class="text-sm font-semibold text-slate-400 dark:text-slate-500 flex items-center gap-1">
+                                    <i class="ph ph-calendar-blank"></i> 2020 - Present
+                                </span>
+                            </div>
+                            <h3 class="text-lg font-bold text-slate-900 dark:text-white">Advanced Web Systems Engineering</h3>
+                            <p class="text-sm text-teal-600 dark:text-teal-400 font-medium">Independent Mastery Pathways</p>
+                            <p class="text-sm text-slate-500 dark:text-slate-400 mt-3 leading-relaxed">
+                                Ongoing self-guided curriculum focusing on concurrent state paradigms, real-time message socket systems, WebAssembly (Wasm) pipelines, security frameworks, and web components optimization.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ======================================= -->
+        <!-- 3. PROJECTS PAGE VIEW                  -->
+        <!-- ======================================= -->
+        <section id="page-projects" class="page-transition page-hidden">
+            <div class="space-y-8">
+                <div class="text-center max-w-xl mx-auto">
+                    <h2 class="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">Production Artifacts</h2>
+                    <p class="text-sm text-slate-500 dark:text-slate-400 mt-2">A curated selection of software systems architected with focus on scalability, speed, and clean code principles.</p>
+                </div>
+
+                <!-- Projects Filter Tabs (Dynamic Categories) -->
+                <div class="flex items-center justify-center">
+                    <div class="inline-flex p-1 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200/50 dark:border-slate-800/80">
+                        <button onclick="filterProjects('all')" id="filter-btn-all" class="px-4 py-2 text-xs sm:text-sm font-medium rounded-lg transition-colors bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-sm">
+                            All
+                        </button>
+                        <button onclick="filterProjects('Frontend')" id="filter-btn-Frontend" class="px-4 py-2 text-xs sm:text-sm font-medium rounded-lg transition-colors text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white">
+                            Frontend
+                        </button>
+                        <button onclick="filterProjects('Backend')" id="filter-btn-Backend" class="px-4 py-2 text-xs sm:text-sm font-medium rounded-lg transition-colors text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white">
+                            Backend
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Dynamic Card Catalog containing items with dynamic class matching filtering states -->
+                <div id="projects-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Cards will be populated dynamically by JavaScript to manage interactive filtering and state rendering -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Global Interactive Project Modal (SPA architecture instead of basic alerts) -->
+    <div id="project-modal" class="hidden fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <!-- Overlay container -->
+        <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div onclick="closeProjectModal()" class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm transition-opacity" aria-hidden="true"></div>
+            <!-- Center alignment dummy -->
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+            
+            <div class="inline-block align-bottom bg-white dark:bg-slate-900 rounded-3xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-xl sm:w-full border border-slate-200 dark:border-slate-800">
+                <div class="relative">
+                    <button onclick="closeProjectModal()" class="absolute top-4 right-4 p-2 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-slate-800 dark:hover:text-white transition-colors" aria-label="Close modal">
+                        <i class="ph ph-x text-lg"></i>
+                    </button>
+                    <!-- Detail block inside modal -->
+                    <div id="modal-content-area" class="p-6 sm:p-8">
+                        <!-- Dynamic contents will be written here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contact Drawer Modal -->
+    <div id="contact-modal" class="hidden fixed inset-0 z-50 overflow-y-auto" aria-labelledby="contact-title" role="dialog" aria-modal="true">
+        <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div onclick="closeContactModal()" class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm transition-opacity" aria-hidden="true"></div>
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+            
+            <div class="inline-block align-bottom bg-white dark:bg-slate-900 rounded-3xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-md sm:w-full border border-slate-200 dark:border-slate-800 p-6 sm:p-8">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-xl font-bold text-slate-900 dark:text-white">Let's Connect</h3>
+                    <button onclick="closeContactModal()" class="p-2 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-slate-800 dark:hover:text-white transition-colors" aria-label="Close contact modal">
+                        <i class="ph ph-x text-lg"></i>
+                    </button>
+                </div>
+                <!-- Interactive form container -->
+                <form id="portfolio-contact-form" onsubmit="submitForm(event)" class="space-y-4">
+                    <div>
+                        <label for="contact-name" class="block text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-1.5">Your Name</label>
+                        <input type="text" id="contact-name" required class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 text-sm dark:text-white transition-colors">
+                    </div>
+                    <div>
+                        <label for="contact-email" class="block text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-1.5">Email Address</label>
+                        <input type="email" id="contact-email" required class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 text-sm dark:text-white transition-colors">
+                    </div>
+                    <div>
+                        <label for="contact-message" class="block text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-1.5">Message Content</label>
+                        <textarea id="contact-message" rows="4" required class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 text-sm dark:text-white transition-colors resize-none"></textarea>
+                    </div>
+                    <button type="submit" class="w-full py-3.5 px-4 rounded-xl bg-brand-500 text-white font-semibold text-sm hover:bg-brand-600 transition-colors active:scale-[0.98]">
+                        Send Secure Message
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Notification Toast System (Avoid system alerts) -->
+    <div id="toast-notify" class="fixed bottom-6 right-6 z-50 pointer-events-none transform translate-y-12 opacity-0 transition-all duration-300">
+        <div class="px-5 py-3.5 rounded-2xl bg-slate-900/90 dark:bg-white/90 backdrop-blur text-white dark:text-slate-950 shadow-xl border border-white/10 dark:border-slate-200/10 flex items-center space-x-3">
+            <div id="toast-icon-bg" class="w-7 h-7 rounded-full flex items-center justify-center bg-emerald-500/20 text-emerald-400">
+                <i id="toast-icon" class="ph ph-check-circle text-lg"></i>
+            </div>
+            <div>
+                <p id="toast-title" class="font-semibold text-xs sm:text-sm">Action Complete</p>
+                <p id="toast-msg" class="text-[10px] sm:text-xs opacity-80 mt-0.5">Success details logged.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Simple responsive footer layout -->
+    <footer class="w-full border-t border-slate-200 dark:border-slate-800 mt-12 bg-white dark:bg-slate-950 transition-colors">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <span class="text-xs text-slate-400 dark:text-slate-500">&copy; 2026 Milko Sinapov. All rights reserved.</span>
+            <div class="flex items-center space-x-4">
+                <button onclick="navigateTo('about')" class="text-xs text-slate-500 hover:text-brand-500 dark:text-slate-400 transition-colors">About</button>
+                <button onclick="navigateTo('education')" class="text-xs text-slate-500 hover:text-brand-500 dark:text-slate-400 transition-colors">Education</button>
+                <button onclick="navigateTo('projects')" class="text-xs text-slate-500 hover:text-brand-500 dark:text-slate-400 transition-colors">Projects</button>
+            </div>
+        </div>
     </footer>
 
+    <!-- Complete operational state logic handles active page switches, data models, filters, dark mode, mobile toggles -->
     <script>
-        const observer = new IntersectionObserver(entries => {
-            entries.forEach(entry => {
-                if(entry.isIntersecting){
-                    entry.target.classList.add('show');
+        // Core Project Data Models
+        const PROJECTS_LIST = [
+            {
+                id: 1,
+                name: "High-Scale E-Commerce Engine",
+                category: "Frontend",
+                tags: ["React", "Node.js", "GraphQL"],
+                impact: "40% performance improvement",
+                imageBg: "bg-gradient-to-tr from-brand-500/10 to-indigo-500/10",
+                desc: "High-scale transactional platform designed with custom microservices architecture and immediate real-time inventory synchronization."
+            },
+            {
+                id: 2,
+                name: "AI Analytics Dashboard",
+                category: "Backend",
+                tags: ["Python", "TypeScript", "D3.js"],
+                impact: "Automated standard pipelines",
+                imageBg: "bg-gradient-to-tr from-indigo-500/10 to-purple-500/10",
+                desc: "Advanced visualization suites optimized for tracking machine learning model execution outputs and computing trends analytics."
+            },
+            {
+                id: 3,
+                name: "Corporate Design System",
+                category: "Frontend",
+                tags: ["React", "Tailwind CSS", "Figma"],
+                impact: "Used in 4 production systems",
+                imageBg: "bg-gradient-to-tr from-rose-500/10 to-orange-500/10",
+                desc: "Enterprise UI kit with automated theme alignment compiling, precise documentation output, and strict AA accessibility metrics."
+            },
+            {
+                id: 4,
+                name: "Telematics Flow Service",
+                category: "Backend",
+                tags: ["Go", "Kafka", "PostgreSQL"],
+                impact: "Handles 12k records/sec",
+                imageBg: "bg-gradient-to-tr from-teal-500/10 to-emerald-500/10",
+                desc: "Optimized log ingestion service pipeline aggregating sensory triggers and telemetry data feeds across edge compute devices."
+            }
+        ];
+
+        // Core App Routing state configuration
+        let activePage = "about";
+        let activeProjectFilter = "all";
+
+        // Initial setup on layout load
+        window.onload = function() {
+            // Apply current theme settings
+            initTheme();
+            // Build dynamic project lists on grid
+            renderProjectsGrid();
+            // Attach active visual classes inside controls
+            updateNavigationIndicators();
+        }
+
+        // Navigation control system (Page Switcher with smooth dynamic transition steps)
+        function navigateTo(pageId) {
+            if (activePage === pageId) return;
+
+            // Target page frames
+            const currentFrame = document.getElementById(`page-${activePage}`);
+            const nextFrame = document.getElementById(`page-${pageId}`);
+
+            if (currentFrame && nextFrame) {
+                // Apply transition fade-out steps
+                currentFrame.classList.remove('page-visible');
+                currentFrame.classList.add('page-hidden');
+
+                setTimeout(() => {
+                    currentFrame.classList.add('hidden');
+                    nextFrame.classList.remove('hidden');
+                    
+                    // Force DOM reflow to trigger visual transition
+                    nextFrame.offsetHeight; 
+
+                    nextFrame.classList.remove('page-hidden');
+                    nextFrame.classList.add('page-visible');
+                    activePage = pageId;
+                    
+                    // Update header tab active selections
+                    updateNavigationIndicators();
+                    // Auto-close navigation mobile drawer if toggled open
+                    const burgerMenu = document.getElementById("mobile-menu");
+                    if (!burgerMenu.classList.contains("hidden")) {
+                        toggleMobileMenu();
+                    }
+                }, 300);
+            }
+        }
+
+        // Sync active state indicators on header controls
+        function updateNavigationIndicators() {
+            const tabs = ["about", "education", "projects"];
+            tabs.forEach(tab => {
+                const btn = document.querySelector(`[data-nav="${tab}"]`);
+                const btnMobile = document.querySelector(`[data-nav-mobile="${tab}"]`);
+
+                if (btn) {
+                    if (tab === activePage) {
+                        btn.className = "px-4 py-2 rounded-lg text-sm font-medium transition-colors text-brand-500 bg-brand-50 dark:bg-brand-900/30 dark:text-brand-300";
+                    } else {
+                        btn.className = "px-4 py-2 rounded-lg text-sm font-medium transition-colors text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-900";
+                    }
+                }
+
+                if (btnMobile) {
+                    if (tab === activePage) {
+                        btnMobile.className = "w-full text-left px-4 py-3 rounded-xl text-base font-medium flex items-center space-x-3 text-brand-500 bg-brand-50 dark:bg-brand-900/30 dark:text-brand-300";
+                    } else {
+                        btnMobile.className = "w-full text-left px-4 py-3 rounded-xl text-base font-medium flex items-center space-x-3 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-900";
+                    }
                 }
             });
-        });
+        }
 
-        document.querySelectorAll('.fade-in').forEach(el => {
-            observer.observe(el);
-        });
+        // Mobile Burger Menu toggle animation logic
+        function toggleMobileMenu() {
+            const menu = document.getElementById("mobile-menu");
+            const isClosed = menu.classList.contains("hidden");
+
+            // Element lines for transformation
+            const line1 = document.getElementById("burger-line-1");
+            const line2 = document.getElementById("burger-line-2");
+            const line3 = document.getElementById("burger-line-3");
+
+            if (isClosed) {
+                menu.classList.remove("hidden");
+                // Run line rotation sequence
+                line1.style.transform = "rotate(45deg) translate(3px, -2px)";
+                line2.style.opacity = "0";
+                line3.style.transform = "rotate(-45deg) translate(3px, 2px)";
+            } else {
+                menu.classList.add("hidden");
+                // Restore baseline burger steps
+                line1.style.transform = "none";
+                line2.style.opacity = "1";
+                line3.style.transform = "none";
+            }
+        }
+
+        // Dynamic render module for projects catalog
+        function renderProjectsGrid() {
+            const grid = document.getElementById("projects-grid");
+            if (!grid) return;
+            grid.innerHTML = "";
+
+            const filteredData = PROJECTS_LIST.filter(p => activeProjectFilter === "all" || p.category === activeProjectFilter);
+
+            filteredData.forEach(p => {
+                const card = document.createElement("div");
+                card.className = "bg-white dark:bg-slate-900 rounded-3xl overflow-hidden border border-slate-100 dark:border-slate-800 shadow-md hover:shadow-xl transition-all hover:translate-y-[-4px] flex flex-col justify-between";
+
+                // Map elements inside card body
+                card.innerHTML = `
+                    <div class="p-6">
+                        <div class="h-40 rounded-2xl ${p.imageBg} flex items-center justify-center border border-slate-100 dark:border-slate-800/80 mb-5 relative overflow-hidden group">
+                            <i class="ph ph-code-block text-4xl text-slate-400 group-hover:scale-110 transition-transform"></i>
+                            <span class="absolute top-3 left-3 text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded bg-white/90 dark:bg-slate-900/90 text-slate-600 dark:text-slate-300 border border-slate-100/50 dark:border-slate-800">${p.category}</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-slate-900 dark:text-white leading-tight">${p.name}</h3>
+                        <p class="text-sm text-slate-500 dark:text-slate-400 mt-2 line-clamp-3">${p.desc}</p>
+                    </div>
+                    <div class="px-6 pb-6 pt-2 flex items-center justify-between border-t border-slate-50 dark:border-slate-800/40">
+                        <div class="flex flex-wrap gap-1">
+                            ${p.tags.map(t => `<span class="text-[10px] font-semibold text-brand-600 dark:text-brand-400 px-2 py-0.5 rounded-md bg-brand-50 dark:bg-brand-950/20">${t}</span>`).join('')}
+                        </div>
+                        <button onclick="viewProjectDetails(${p.id})" class="p-2.5 rounded-xl bg-slate-50 hover:bg-brand-50 hover:text-brand-500 dark:bg-slate-800 dark:hover:bg-slate-700/60 transition-colors text-slate-500 dark:text-slate-300" aria-label="Explore Project Metrics">
+                            <i class="ph ph-arrow-square-out text-lg"></i>
+                        </button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // Projects category tab switching filter controls
+        function filterProjects(category) {
+            activeProjectFilter = category;
+
+            // Sync active selectors inside filter panels
+            const buttons = ["all", "Frontend", "Backend"];
+            buttons.forEach(btnId => {
+                const button = document.getElementById(`filter-btn-${btnId}`);
+                if (button) {
+                    if (btnId === category) {
+                        button.className = "px-4 py-2 text-xs sm:text-sm font-medium rounded-lg transition-colors bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-sm";
+                    } else {
+                        button.className = "px-4 py-2 text-xs sm:text-sm font-medium rounded-lg transition-colors text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white";
+                    }
+                }
+            });
+
+            // Re-render matching card elements
+            renderProjectsGrid();
+        }
+
+        // Open detailed view context in a clean, modern modal overlay
+        function viewProjectDetails(projectId) {
+            const project = PROJECTS_LIST.find(p => p.id === projectId);
+            if (!project) return;
+
+            const modal = document.getElementById("project-modal");
+            const modalContentArea = document.getElementById("modal-content-area");
+
+            modalContentArea.innerHTML = `
+                <div class="flex items-center space-x-2.5 mb-4">
+                    <span class="px-2.5 py-1 rounded-lg bg-brand-50 dark:bg-brand-950/30 text-brand-600 dark:text-brand-300 text-xs font-bold uppercase tracking-wider">${project.category}</span>
+                    <span class="text-xs text-slate-400 font-medium">Artifact Details</span>
+                </div>
+                <h3 class="text-2xl font-bold text-slate-900 dark:text-white tracking-tight leading-snug">${project.name}</h3>
+                
+                <div class="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 mt-4 flex items-center space-x-3 text-emerald-700 dark:text-emerald-400">
+                    <i class="ph ph-trend-up text-2xl"></i>
+                    <div>
+                        <span class="text-xs font-semibold uppercase tracking-wider opacity-80 block">Verified Technical Impact</span>
+                        <span class="font-bold text-sm sm:text-base">${project.impact}</span>
+                    </div>
+                </div>
+
+                <div class="mt-6 space-y-4">
+                    <p class="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed">${project.desc}</p>
+                    <div>
+                        <span class="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-2">Build Tech Stack</span>
+                        <div class="flex flex-wrap gap-1.5">
+                            ${project.tags.map(t => `<span class="text-xs font-medium text-slate-600 dark:text-slate-300 px-3 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200/50 dark:border-slate-700/50">${t}</span>`).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Open Modal
+            modal.classList.remove("hidden");
+        }
+
+        function closeProjectModal() {
+            document.getElementById("project-modal").classList.add("hidden");
+        }
+
+        // Contact dialog modal triggers
+        function openContactModal() {
+            document.getElementById("contact-modal").classList.remove("hidden");
+        }
+
+        function closeContactModal() {
+            document.getElementById("contact-modal").classList.add("hidden");
+            document.getElementById("portfolio-contact-form").reset();
+        }
+
+        // About page helper to show detailed skill descriptions without modal intrusions
+        function revealSkillDetail(skillTitle, description) {
+            const detailBox = document.getElementById("skill-detail-box");
+            const detailTitle = document.getElementById("skill-detail-title");
+            const detailDesc = document.getElementById("skill-detail-desc");
+
+            detailTitle.textContent = skillTitle;
+            detailDesc.textContent = description;
+            detailBox.classList.remove("hidden");
+        }
+
+        // Custom interactive form submission handler
+        function submitForm(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById("contact-name").value;
+            const email = document.getElementById("contact-email").value;
+            const message = document.getElementById("contact-message").value;
+
+            // Run a simulated network state delay
+            const submitButton = event.target.querySelector('button[type="submit"]');
+            submitButton.disabled = true;
+            submitButton.textContent = "Processing Connection...";
+
+            setTimeout(() => {
+                // Return interface to baseline
+                submitButton.disabled = false;
+                submitButton.textContent = "Send Secure Message";
+                
+                // Close dialog
+                closeContactModal();
+                
+                // Show clean toast notification to user (No default system alerts)
+                showToast("Connection Initiated", "Message processed. We will coordinate shortly.", "success");
+            }, 1200);
+        }
+
+        // Download Action Simulation
+        function downloadResume() {
+            showToast("Resume Downloaded", "PDF artifact transfer sequence complete.", "success");
+        }
+
+        // Custom notification system triggers
+        function showToast(title, message, type = "success") {
+            const toast = document.getElementById("toast-notify");
+            const tTitle = document.getElementById("toast-title");
+            const tMsg = document.getElementById("toast-msg");
+            const tIconBg = document.getElementById("toast-icon-bg");
+            const tIcon = document.getElementById("toast-icon");
+
+            tTitle.textContent = title;
+            tMsg.textContent = message;
+
+            if (type === "success") {
+                tIconBg.className = "w-7 h-7 rounded-full flex items-center justify-center bg-emerald-500/20 text-emerald-400";
+                tIcon.className = "ph ph-check-circle text-lg";
+            } else {
+                tIconBg.className = "w-7 h-7 rounded-full flex items-center justify-center bg-brand-500/20 text-brand-400";
+                tIcon.className = "ph ph-info text-lg";
+            }
+
+            // Animate element visibility sliding upward
+            toast.classList.remove("translate-y-12", "opacity-0");
+            toast.classList.add("translate-y-0", "opacity-100");
+
+            setTimeout(() => {
+                toast.classList.remove("translate-y-0", "opacity-100");
+                toast.classList.add("translate-y-12", "opacity-0");
+            }, 4500);
+        }
+
+        // Theme management control modules (Preserves system toggles)
+        function toggleDarkMode() {
+            const html = document.documentElement;
+            const isDark = html.classList.contains("dark");
+            
+            if (isDark) {
+                html.classList.remove("dark");
+                localStorage.setItem("theme", "light");
+            } else {
+                html.classList.add("dark");
+                localStorage.setItem("theme", "dark");
+            }
+            updateThemeIcons();
+        }
+
+        function initTheme() {
+            const savedTheme = localStorage.getItem("theme");
+            const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+            
+            if (savedTheme === "dark" || (!savedTheme && prefersDark)) {
+                document.documentElement.classList.add("dark");
+            } else {
+                document.documentElement.classList.remove("dark");
+            }
+            updateThemeIcons();
+        }
+
+        function updateThemeIcons() {
+            const iconDesktop = document.getElementById("theme-icon");
+            const iconMobile = document.getElementById("theme-icon-mobile");
+            const isDark = document.documentElement.classList.contains("dark");
+
+            if (isDark) {
+                if (iconDesktop) iconDesktop.className = "ph ph-sun text-lg text-amber-400";
+                if (iconMobile) iconMobile.className = "ph ph-sun text-lg text-amber-400";
+            } else {
+                if (iconDesktop) iconDesktop.className = "ph ph-moon text-lg text-slate-700";
+                if (iconMobile) iconMobile.className = "ph ph-moon text-lg text-slate-700";
+            }
+        }
     </script>
-
 </body>
 </html>
